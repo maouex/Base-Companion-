@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediBase | Intranet</title>
+    <title>Base Companion | Intranet</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -514,7 +514,7 @@
     <nav class="sidebar">
         <div class="brand">
             <div class="logo-shape"></div>
-            <span>MediBase</span>
+            <span>Base Companion</span>
         </div>
 
         <button class="nav-btn active" onclick="switchView('dashboard', this)">
@@ -1015,7 +1015,7 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('headerDate').innerText = new Date().toLocaleDateString('fr-FR', options);
 
-            const stored = localStorage.getItem('medibase_db');
+            const stored = localStorage.getItem('basecompanion_db');
             if(stored) {
                 appData = JSON.parse(stored);
                 if(!appData.dashboardWidgets) appData.dashboardWidgets = [];
@@ -1034,7 +1034,7 @@
         }
 
         function saveData() {
-            localStorage.setItem('medibase_db', JSON.stringify(appData));
+            localStorage.setItem('basecompanion_db', JSON.stringify(appData));
             if(currentView === 'dashboard') renderDashboard();
             if(currentView === 'grid') renderGrid();
             if(currentView === 'directory') renderDirectory();
@@ -1330,10 +1330,10 @@
                 // Send email directly for contacts (no JSON file)
                 const catName = appData.contactCategories.find(c => c.id === submission.data.catId)?.name || 'Non spécifié';
                 const fieldsText = submission.data.fields.map(f => `${f.label}: ${f.value}`).join('\n');
-                const subject = encodeURIComponent(`[MediBase] Nouveau Contact - ${submission.data.name}`);
+                const subject = encodeURIComponent(`[Base Companion] Nouveau Contact - ${submission.data.name}`);
                 const body = encodeURIComponent(`Bonjour,
 
-Nouvelle demande d'ajout de contact dans MediBase:
+Nouvelle demande d'ajout de contact dans Base Companion:
 
 Nom: ${submission.data.name}
 Catégorie: ${catName}
@@ -1359,10 +1359,10 @@ Cordialement.`);
                  if(!submission.data.message) return alert("Message requis");
 
                 // Send email directly for feedback (no JSON file)
-                const subject = encodeURIComponent(`[MediBase] Signalement d'erreur - ${submission.data.refTitle}`);
+                const subject = encodeURIComponent(`[Base Companion] Signalement d'erreur - ${submission.data.refTitle}`);
                 const body = encodeURIComponent(`Bonjour,
 
-Signalement d'erreur sur une fiche MediBase:
+Signalement d'erreur sur une fiche Base Companion:
 
 Fiche concernée: ${submission.data.refTitle}
 ID de la fiche: ${submission.data.refId}
@@ -1393,8 +1393,8 @@ Cordialement.`);
             document.body.removeChild(a);
 
             // Trigger Email (Mailto)
-            const subject = encodeURIComponent(`Contribution MediBase: ${subType.toUpperCase()} (${scope})`);
-            const body = encodeURIComponent(`Bonjour,\n\nVeuillez trouver ci-joint le fichier de contribution (${fileName}) généré par MediBase.\n\nCordialement.`);
+            const subject = encodeURIComponent(`Contribution Base Companion: ${subType.toUpperCase()} (${scope})`);
+            const body = encodeURIComponent(`Bonjour,\n\nVeuillez trouver ci-joint le fichier de contribution (${fileName}) généré par Base Companion.\n\nCordialement.`);
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
 
             alert("Le fichier de contribution a été téléchargé. Veuillez l'envoyer par email à votre administrateur (votre client mail devrait s'ouvrir).");
@@ -1463,7 +1463,7 @@ Cordialement.`);
                     }
 
                 } catch(err) {
-                    alert("Erreur: Le fichier ne semble pas être une contribution MediBase valide.");
+                    alert("Erreur: Le fichier ne semble pas être une contribution Base Companion valide.");
                     console.error(err);
                 }
                 el.value = ''; // Reset
@@ -2250,7 +2250,7 @@ Cordialement.`);
             const name = scope === 'all' ? 'backup_full' : `backup_${scope}`;
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([JSON.stringify(exportData)], {type:'application/json'}));
-            a.download = `medibase_${name}.json`;
+            a.download = `basecompanion_${name}.json`;
             a.click();
         }
 
