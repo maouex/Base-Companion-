@@ -543,23 +543,29 @@
 
         <div class="admin-panel">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; padding: 0 0.5rem;">
-                <span style="color:var(--text-muted); font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Admin</span>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <span style="color:var(--text-muted); font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Admin</span>
+                    <span id="adminModeLabel" style="color:var(--primary); font-size:0.65rem; font-weight:600;"></span>
+                </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="adminToggle" onchange="toggleAdmin()">
                     <span class="slider"></span>
                 </label>
             </div>
-            
+
             <div id="adminMenu" class="hidden">
                  <button class="nav-btn" onclick="triggerContributionImport()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     Importer contribution
                 </button>
                 <input type="file" id="contribImportInput" hidden onchange="processContributionImport(this)">
-                <button class="nav-btn" onclick="openSettings()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                    Gestion & Bases
-                </button>
+
+                <div id="adminFullMenu" class="hidden">
+                    <button class="nav-btn" onclick="openSettings()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Gestion & Bases
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -977,7 +983,7 @@
 
         // --- STATE ---
         let appData = { categories: [], contactCategories:[], articles: [], contacts: [], dashboardWidgets: [], dashboardInfo: {} };
-        let isAdmin = false;
+        let isAdmin = ''; // '', 'basic', 'full'
         let currentView = 'dashboard';
         let filterCatId = 'all';
         let filterSubCatId = null;
@@ -1060,14 +1066,46 @@
         }
 
         function toggleAdmin() {
-            isAdmin = document.getElementById('adminToggle').checked;
-            document.body.classList.toggle('admin-mode', isAdmin);
-            document.getElementById('adminMenu').classList.toggle('hidden', !isAdmin);
-            
-            document.getElementById('addArticleBtn').classList.toggle('hidden', !(isAdmin && currentView !== 'directory'));
-            document.getElementById('addContactBtn').classList.toggle('hidden', !(isAdmin && currentView === 'directory'));
-            document.getElementById('dashEditHint').classList.toggle('hidden', !(isAdmin && currentView === 'dashboard'));
-            
+            const toggle = document.getElementById('adminToggle');
+            const isChecked = toggle.checked;
+
+            if(!isChecked) {
+                // Désactiver le mode admin
+                isAdmin = '';
+                document.getElementById('adminModeLabel').textContent = '';
+            } else {
+                // Activer le mode admin
+                const code = prompt("Entrez le code admin (ou laissez vide pour accès basique):");
+
+                if(code === '1234') {
+                    isAdmin = 'full';
+                    document.getElementById('adminModeLabel').textContent = '(Complet)';
+                } else if(code === null) {
+                    // Annulation
+                    toggle.checked = false;
+                    isAdmin = '';
+                    document.getElementById('adminModeLabel').textContent = '';
+                } else {
+                    // Accès basique (code vide ou incorrect)
+                    isAdmin = 'basic';
+                    document.getElementById('adminModeLabel').textContent = '(Import)';
+                }
+            }
+
+            const hasAdmin = isAdmin !== '';
+            const isFull = isAdmin === 'full';
+
+            document.body.classList.toggle('admin-mode', isFull);
+            document.getElementById('adminMenu').classList.toggle('hidden', !hasAdmin);
+
+            // Boutons d'édition visibles uniquement en mode full
+            document.getElementById('addArticleBtn').classList.toggle('hidden', !(isFull && currentView !== 'directory'));
+            document.getElementById('addContactBtn').classList.toggle('hidden', !(isFull && currentView === 'directory'));
+            document.getElementById('dashEditHint').classList.toggle('hidden', !(isFull && currentView === 'dashboard'));
+
+            // Afficher/masquer les fonctionnalités admin dans le menu
+            document.getElementById('adminFullMenu').classList.toggle('hidden', !isFull);
+
             if(currentView === 'dashboard') renderDashboard();
             if(currentView === 'grid') renderGrid();
             if(currentView === 'directory') renderDirectory();
@@ -1490,7 +1528,7 @@ Cordialement.`);
                 }
 
                 if(card) {
-                    if(isAdmin) {
+                    if(isAdmin === 'full') {
                         const delBtn = document.createElement('div');
                         delBtn.className = 'widget-delete-btn';
                         delBtn.innerHTML = '×';
@@ -1508,7 +1546,7 @@ Cordialement.`);
                 }
             });
 
-            if(isAdmin) {
+            if(isAdmin === 'full') {
                 const addBtn = document.createElement('div');
                 addBtn.className = 'add-widget-btn';
                 addBtn.innerHTML = '<span>+</span> Ajouter';
@@ -1627,7 +1665,7 @@ Cordialement.`);
                     </div>
                     <h3>${getScopeBadge(item.scope)} ${item.type === 'tree' ? '🌳 ' : ''}${item.title}</h3>
                     <p>${item.type === 'tree' ? 'Arbre de décision interactif.' : (item.blocks?.[0]?.content?.substring(0,80) || '...')}</p>
-                    ${isAdmin ? `<div style="margin-top:auto; display:flex; justify-content:flex-end; gap:10px;"><button class="btn-icon danger" onclick="deleteArticle('${item.id}', event)">🗑</button><button class="btn-icon" onclick="openEditor('${item.id}', event)">✎</button></div>` : ''}
+                    ${isAdmin === 'full' ? `<div style="margin-top:auto; display:flex; justify-content:flex-end; gap:10px;"><button class="btn-icon danger" onclick="deleteArticle('${item.id}', event)">🗑</button><button class="btn-icon" onclick="openEditor('${item.id}', event)">✎</button></div>` : ''}
                 `;
                 card.onclick = (e) => { if(!e.target.closest('button')) openReader(item); };
                 grid.appendChild(card);
@@ -1655,7 +1693,7 @@ Cordialement.`);
                         <div style="font-size:0.8rem; color:var(--text-muted);">${cat?.name||''}</div>
                         ${c.fields.slice(0,2).map(f => `<div style="font-size:0.85rem; color:var(--text-dark); margin-top:2px;"><b>${f.label}:</b> ${f.value}</div>`).join('')}
                     </div>
-                    ${isAdmin ? `<button onclick="openContactEditor('${c.id}')" class="btn-icon">✎</button>` : ''}
+                    ${isAdmin === 'full' ? `<button onclick="openContactEditor('${c.id}')" class="btn-icon">✎</button>` : ''}
                 `;
                 grid.appendChild(card);
             });
