@@ -952,34 +952,15 @@
     <script>
         // --- DONNÉES PAR DÉFAUT ---
         const defaultData = {
-            categories: [
-                { id: 'c1', name: 'Médical', color: '#FF8F6B', subcategories: [{id:'sc1', name:'Cardiologie'}], scope: 'global' },
-                { id: 'c2', name: 'Administratif', color: '#6B9EFF', subcategories: [], scope: 'global' },
-                { id: 'c3', name: 'Technique', color: '#4ECDC4', subcategories: [], scope: 'local' }
-            ],
-            contactCategories: [
-                { id: 'cc1', name: 'Garde' }, { id: 'cc2', name: 'Direction' }
-            ],
-            articles: [
-                {
-                    id: 'a1', title: 'Protocole d\'accueil', catId: 'c2', type: 'standard', scope: 'global',
-                    blocks: [{ type: 'alert', variant: 'info', content: 'Vérifier l\'identité du patient.' }]
-                }
-            ],
-            contacts: [
-                {
-                    id: 'ct1', name: 'Dr. House', catId: 'cc1', scope: 'global',
-                    fields: [{ label: 'Bip', value: '4002' }]
-                }
-            ],
-            dashboardWidgets: [
-                { id: 'w1', type: 'article', contentId: 'a1', scope: 'local' },
-                { id: 'w2', type: 'link', title: 'Planning Garde', url: '#', scope: 'local' }
-            ],
+            categories: [],
+            contactCategories: [],
+            articles: [],
+            contacts: [],
+            dashboardWidgets: [],
             dashboardInfo: {
                 title: "Information",
-                content: "Pensez à mettre à jour les protocoles d'urgence avant la fin du mois.",
-                tag: "Priorité Haute"
+                content: "",
+                tag: ""
             }
         };
 
