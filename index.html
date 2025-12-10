@@ -941,31 +941,6 @@
         </div>
     </div>
 
-    <!-- INFO PANEL EDITOR MODAL -->
-    <div id="infoEditModal" class="modal-backdrop">
-        <div class="modal-panel" style="max-width: 500px;">
-             <div class="modal-header">
-                <h3>Modifier le panneau d'info</h3>
-                <button onclick="closeModal('infoEditModal')" class="btn-icon">×</button>
-            </div>
-            <div class="modal-body">
-                <label style="display:block; margin-bottom:5px; font-weight:600;">Titre</label>
-                <input type="text" id="infoEditTitle" class="input-std" style="margin-bottom:1rem;">
-                
-                <label style="display:block; margin-bottom:5px; font-weight:600;">Message</label>
-                <textarea id="infoEditContent" class="input-std" rows="4" style="margin-bottom:1rem;"></textarea>
-                
-                <label style="display:block; margin-bottom:5px; font-weight:600;">Tag (ex: Urgent)</label>
-                <input type="text" id="infoEditTag" class="input-std" style="margin-bottom:1rem;">
-                
-                <div style="display:flex; justify-content:flex-end; gap:10px;">
-                    <button onclick="closeModal('infoEditModal')" class="btn-ghost">Annuler</button>
-                    <button onclick="saveInfoPanel()" class="btn-primary" style="flex:1;">Mettre à jour</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // --- DONNÉES PAR DÉFAUT ---
         const defaultData = {
@@ -1417,12 +1392,6 @@
             document.getElementById('statContacts').innerText = appData.contacts.length;
             document.getElementById('statPinned').innerText = appData.dashboardWidgets.length;
 
-            // Info Panel
-            const info = appData.dashboardInfo || defaultData.dashboardInfo;
-            document.getElementById('infoTitle').innerText = info.title;
-            document.getElementById('infoContent').innerText = info.content;
-            document.getElementById('infoTag').innerText = info.tag;
-
             const container = document.getElementById('dashboardPinned');
             container.innerHTML = '';
             
@@ -1509,26 +1478,6 @@
             const labels = { global: 'GLO', regional: 'REG', local: 'LOC' };
             return `<span class="scope-badge scope-${scope}">${labels[scope]}</span>`;
         }
-
-        // --- INFO PANEL EDITOR ---
-        function openInfoEditor() {
-            const info = appData.dashboardInfo;
-            document.getElementById('infoEditTitle').value = info.title;
-            document.getElementById('infoEditContent').value = info.content;
-            document.getElementById('infoEditTag').value = info.tag;
-            openModal('infoEditModal');
-        }
-
-        function saveInfoPanel() {
-            appData.dashboardInfo = {
-                title: document.getElementById('infoEditTitle').value,
-                content: document.getElementById('infoEditContent').value,
-                tag: document.getElementById('infoEditTag').value
-            };
-            saveData();
-            closeModal('infoEditModal');
-        }
-
 
         // --- DASHBOARD DRAG & DROP ---
         function handleDragStart(e) {
