@@ -237,20 +237,20 @@
         @media (max-width: 800px) { .pinned-stack { grid-template-columns: repeat(4, 1fr); } }
 
         .widget-card {
-            background: white; border-radius: var(--radius-sm); padding: 0.4rem;
+            background: white; border-radius: var(--radius-sm); padding: 0.5rem;
             box-shadow: var(--shadow-card); border: 1px solid var(--border);
             display: flex; flex-direction: column; /* Vertical layout */
             align-items: center; justify-content: center; text-align: center;
             cursor: pointer; transition: 0.2s; position: relative;
-            aspect-ratio: 1 / 1.1; /* Square-ish aspect ratio */
+            aspect-ratio: 1 / 1; /* Square aspect ratio for better content fit */
         }
         .widget-card:hover { box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); transform: translateY(-5px); border-color: transparent; }
         .widget-card.draggable { cursor: grab; }
         
         .widget-icon-box {
-            width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; font-weight: 700; margin-bottom: 4px; position: relative;
+            font-size: 1rem; font-weight: 700; margin-bottom: 6px; position: relative;
         }
         .w-color-1 { background: var(--primary-light); color: var(--primary); }
         .w-color-2 { background: var(--secondary-light); color: var(--secondary); }
@@ -258,21 +258,21 @@
         
         .widget-content { width: 100%; display: flex; flex-direction: column; align-items: center; }
         .widget-tag {
-            display: inline-block; padding: 1px 4px; border-radius: 8px;
-            font-size: 0.45rem; font-weight: 700; text-transform: uppercase;
-            background: #f1f2f6; color: var(--text-muted); margin-bottom: 2px;
+            display: inline-block; padding: 2px 6px; border-radius: 8px;
+            font-size: 0.55rem; font-weight: 700; text-transform: uppercase;
+            background: #f1f2f6; color: var(--text-muted); margin-bottom: 4px;
         }
-        .widget-title { font-size: 0.6rem; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .widget-sub { font-size: 0.5rem; color: var(--text-muted); }
+        .widget-title { font-size: 0.75rem; font-weight: 700; color: var(--text-dark); margin-bottom: 3px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+        .widget-sub { font-size: 0.65rem; color: var(--text-muted); line-height: 1.2; }
         
         /* Removed action arrow for compact view, click card itself */
         .widget-action { display: none; } 
 
         .widget-delete-btn {
-            position: absolute; top: 3px; right: 3px; width: 14px; height: 14px;
+            position: absolute; top: 4px; right: 4px; width: 18px; height: 18px;
             background: var(--danger); color: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 9px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 5;
+            font-size: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 5;
             display: none; cursor: pointer;
         }
         body.admin-mode .widget-delete-btn { display: flex; }
@@ -286,10 +286,10 @@
             border: 1px dashed #dcdde1; border-radius: var(--radius-sm);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: var(--text-muted); font-weight: 600; cursor: pointer;
-            transition: 0.2s; background: #fdfdfd; gap: 2px; text-align: center;
-            aspect-ratio: 1 / 1.1; font-size: 0.5rem;
+            transition: 0.2s; background: #fdfdfd; gap: 4px; text-align: center;
+            aspect-ratio: 1 / 1; font-size: 0.65rem;
         }
-        .add-widget-btn span { font-size: 1rem; font-weight: 300; line-height: 1; }
+        .add-widget-btn span { font-size: 1.5rem; font-weight: 300; line-height: 1; }
         .add-widget-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 
         /* INFO PANEL */
