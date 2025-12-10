@@ -1286,6 +1286,30 @@
                     fields: Array.from(document.querySelectorAll('#subContactFields > div')).map(d=>({label:d.querySelector('.f-lbl').value, value:d.querySelector('.f-val').value}))
                 };
                 if(!submission.data.name) return alert("Nom requis");
+
+                // Send email directly for contacts (no JSON file)
+                const catName = appData.contactCategories.find(c => c.id === submission.data.catId)?.name || 'Non spécifié';
+                const fieldsText = submission.data.fields.map(f => `${f.label}: ${f.value}`).join('\n');
+                const subject = encodeURIComponent(`[MediBase] Nouveau Contact - ${submission.data.name}`);
+                const body = encodeURIComponent(`Bonjour,
+
+Nouvelle demande d'ajout de contact dans MediBase:
+
+Nom: ${submission.data.name}
+Catégorie: ${catName}
+Portée: ${scope.toUpperCase()}
+
+Coordonnées:
+${fieldsText}
+
+Date de soumission: ${new Date().toLocaleDateString('fr-FR')}
+
+Cordialement.`);
+                window.location.href = `mailto:?subject=${subject}&body=${body}`;
+
+                alert("Votre demande d'ajout de contact a été préparée. Veuillez envoyer l'email qui vient de s'ouvrir.");
+                closeModal('submissionModal');
+                return;
             } else if (subType === 'feedback') {
                 submission.data = {
                     refId: document.getElementById('subRefId').value,
@@ -1293,13 +1317,34 @@
                     message: document.getElementById('subMessage').value
                 };
                  if(!submission.data.message) return alert("Message requis");
+
+                // Send email directly for feedback (no JSON file)
+                const subject = encodeURIComponent(`[MediBase] Signalement d'erreur - ${submission.data.refTitle}`);
+                const body = encodeURIComponent(`Bonjour,
+
+Signalement d'erreur sur une fiche MediBase:
+
+Fiche concernée: ${submission.data.refTitle}
+ID de la fiche: ${submission.data.refId}
+
+Message:
+${submission.data.message}
+
+Date de soumission: ${new Date().toLocaleDateString('fr-FR')}
+
+Cordialement.`);
+                window.location.href = `mailto:?subject=${subject}&body=${body}`;
+
+                alert("Votre signalement a été préparé. Veuillez envoyer l'email qui vient de s'ouvrir.");
+                closeModal('submissionModal');
+                return;
             }
 
-            // Generate JSON File
+            // Generate JSON File (only for article and tree types)
             const fileName = `contribution_${subType}_${new Date().toISOString().split('T')[0]}.json`;
             const blob = new Blob([JSON.stringify(submission, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
-            
+
             const a = document.createElement('a');
             a.href = url;
             a.download = fileName;
