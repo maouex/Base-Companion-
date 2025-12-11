@@ -417,6 +417,21 @@
         }
         .db-action-btn:hover { background: #f8fafc; border-color: var(--secondary); color: var(--secondary); }
 
+        /* TABS SYSTEM */
+        .settings-tabs {
+            display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem;
+        }
+        .settings-tab {
+            padding: 12px 20px; background: transparent; border: none; font-weight: 600;
+            font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: 0.2s;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
+        }
+        .settings-tab:hover { color: var(--primary); }
+        .settings-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
         /* FORM ELEMENTS */
         .input-std {
             width: 100%; padding: 12px 16px; border: 1px solid #dfe6e9; border-radius: 12px;
@@ -895,54 +910,90 @@
 
     <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="modal-backdrop">
-        <div class="modal-panel" style="max-width: 600px;">
+        <div class="modal-panel" style="max-width: 700px;">
             <div class="modal-header">
                 <h3>Gestion & Bases</h3>
                 <button onclick="closeModal('settingsModal')" class="btn-icon">×</button>
             </div>
             <div class="modal-body">
-                <!-- EXPORT SECTION -->
-                <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Exports (Sauvegarde)</h4>
-                <div class="db-action-row">
-                    <button class="db-action-btn" onclick="exportDatabase('global')"><span style="color:var(--scope-global)">●</span> Base Globale</button>
-                    <button class="db-action-btn" onclick="exportDatabase('regional')"><span style="color:var(--scope-regional)">●</span> Base Régionale</button>
-                    <button class="db-action-btn" onclick="exportDatabase('local')"><span style="color:var(--scope-local)">●</span> Base Locale</button>
+                <!-- TABS -->
+                <div class="settings-tabs">
+                    <button class="settings-tab active" onclick="switchSettingsTab('import-export')">💾 Import/Export</button>
+                    <button class="settings-tab" onclick="switchSettingsTab('categories')">🏷️ Catégories</button>
+                    <button class="settings-tab" onclick="switchSettingsTab('purge')">🗑️ Purge</button>
                 </div>
-                <button class="btn-primary" onclick="exportDatabase('all')" style="width:100%; margin-bottom:2rem;">💾 Sauvegarde Complète (Tout)</button>
 
-                <!-- IMPORT SECTION -->
-                <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Imports (Mise à jour)</h4>
-                <div style="margin-bottom:2rem; padding:15px; background:#f0f2f5; border-radius:12px;">
-                    <p style="font-size:0.85rem; margin-bottom:10px; color:var(--text-muted);">Sélectionnez un fichier JSON. L'import remplacera uniquement les données de la portée choisie.</p>
+                <!-- TAB: IMPORT/EXPORT -->
+                <div id="tab-import-export" class="tab-content active">
+                    <!-- EXPORT SECTION -->
+                    <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Exports (Sauvegarde)</h4>
                     <div class="db-action-row">
-                        <button class="db-action-btn" onclick="triggerImport('global')">📥 Import Global</button>
-                        <button class="db-action-btn" onclick="triggerImport('regional')">📥 Import Régional</button>
-                        <button class="db-action-btn" onclick="triggerImport('local')">📥 Import Local</button>
-                        <button class="db-action-btn" onclick="triggerImport('all')" style="color:var(--text-dark)">⚠️ Restauration Totale</button>
+                        <button class="db-action-btn" onclick="exportDatabase('global')"><span style="color:var(--scope-global)">●</span> Base Globale</button>
+                        <button class="db-action-btn" onclick="exportDatabase('regional')"><span style="color:var(--scope-regional)">●</span> Base Régionale</button>
+                        <button class="db-action-btn" onclick="exportDatabase('local')"><span style="color:var(--scope-local)">●</span> Base Locale</button>
+                    </div>
+                    <button class="btn-primary" onclick="exportDatabase('all')" style="width:100%; margin-bottom:2rem;">💾 Sauvegarde Complète (Tout)</button>
+
+                    <!-- IMPORT SECTION -->
+                    <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Imports (Mise à jour)</h4>
+                    <div style="margin-bottom:1rem; padding:15px; background:#f0f2f5; border-radius:12px;">
+                        <p style="font-size:0.85rem; margin-bottom:10px; color:var(--text-muted);">Sélectionnez un fichier JSON. L'import remplacera uniquement les données de la portée choisie.</p>
+                        <div class="db-action-row">
+                            <button class="db-action-btn" onclick="triggerImport('global')">📥 Import Global</button>
+                            <button class="db-action-btn" onclick="triggerImport('regional')">📥 Import Régional</button>
+                            <button class="db-action-btn" onclick="triggerImport('local')">📥 Import Local</button>
+                            <button class="db-action-btn" onclick="triggerImport('all')" style="color:var(--text-dark)">⚠️ Restauration Totale</button>
+                        </div>
+                    </div>
+                    <input type="file" id="dbFileInput" hidden onchange="processImport(this)">
+                </div>
+
+                <!-- TAB: CATEGORIES -->
+                <div id="tab-categories" class="tab-content">
+                    <div id="categoriesSection">
+                        <h4 style="margin-bottom:1rem; color:var(--text-muted);">Catégories Fiches & Sous-catégories</h4>
+                        <div id="catListEdit"></div>
+                        <div style="display:flex; gap:10px; margin-bottom:2rem; margin-top:1rem; padding:10px; background:#f0f2f5; border-radius:12px; align-items:center;">
+                            <input type="color" id="newCatColor" value="#FF8F6B" style="width:40px; height:40px; border:none; background:none; cursor:pointer;">
+                            <input type="text" id="newCatName" class="input-std" placeholder="Nouvelle catégorie..." style="background:white;">
+                            <button onclick="addCategory('article')" class="btn-icon" style="background:var(--primary); color:white;">+</button>
+                        </div>
+
+                        <h4 style="margin-bottom:1rem; color:var(--text-muted);">Catégories Annuaire</h4>
+                        <div id="contactCatListEdit"></div>
+                        <div style="display:flex; gap:10px; margin-top:1rem; padding:10px; background:#f0f2f5; border-radius:12px; align-items:center;">
+                            <input type="text" id="newContactCatName" class="input-std" placeholder="Nouvelle catégorie..." style="background:white;">
+                            <button onclick="addCategory('contact')" class="btn-icon" style="background:var(--primary); color:white;">+</button>
+                        </div>
                     </div>
                 </div>
-                <input type="file" id="dbFileInput" hidden onchange="processImport(this)">
 
-                <div id="categoriesSection">
+                <!-- TAB: PURGE -->
+                <div id="tab-purge" class="tab-content">
+                    <div style="background:#fff5f5; border:2px solid #fee2e2; padding:15px; border-radius:12px; margin-bottom:1.5rem;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                            <span style="font-size:1.5rem;">⚠️</span>
+                            <strong style="color:#991b1b;">Attention : Ces actions sont irréversibles</strong>
+                        </div>
+                        <p style="font-size:0.85rem; color:#991b1b;">La purge supprimera définitivement les données sélectionnées. Assurez-vous d'avoir effectué une sauvegarde avant de continuer.</p>
+                    </div>
+
+                    <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Purge par Portée</h4>
+                    <p style="font-size:0.85rem; margin-bottom:10px; color:var(--text-muted);">Supprimer toutes les données d'une portée spécifique (catégories, fiches, contacts, widgets).</p>
+                    <div class="db-action-row">
+                        <button class="db-action-btn" style="border-color:#fee2e2; color:#991b1b;" onclick="purgeDatabase('global')"><span style="color:var(--scope-global)">●</span> Purger Global</button>
+                        <button class="db-action-btn" style="border-color:#fee2e2; color:#991b1b;" onclick="purgeDatabase('regional')"><span style="color:var(--scope-regional)">●</span> Purger Régional</button>
+                        <button class="db-action-btn" style="border-color:#fee2e2; color:#991b1b;" onclick="purgeDatabase('local')"><span style="color:var(--scope-local)">●</span> Purger Local</button>
+                    </div>
+
                     <hr style="border:0; border-top:1px solid var(--border); margin:1.5rem 0;">
 
-                    <h4 style="margin-bottom:1rem; color:var(--text-muted);">Catégories Fiches & Sous-catégories</h4>
-                    <div id="catListEdit"></div>
-                    <div style="display:flex; gap:10px; margin-bottom:2rem; margin-top:1rem; padding:10px; background:#f0f2f5; border-radius:12px; align-items:center;">
-                        <input type="color" id="newCatColor" value="#FF8F6B" style="width:40px; height:40px; border:none; background:none; cursor:pointer;">
-                        <input type="text" id="newCatName" class="input-std" placeholder="Nouvelle catégorie..." style="background:white;">
-                        <button onclick="addCategory('article')" class="btn-icon" style="background:var(--primary); color:white;">+</button>
-                    </div>
-
-                    <h4 style="margin-bottom:1rem; color:var(--text-muted);">Catégories Annuaire</h4>
-                    <div id="contactCatListEdit"></div>
-                    <div style="display:flex; gap:10px; margin-top:1rem; padding:10px; background:#f0f2f5; border-radius:12px; align-items:center;">
-                        <input type="text" id="newContactCatName" class="input-std" placeholder="Nouvelle catégorie..." style="background:white;">
-                        <button onclick="addCategory('contact')" class="btn-icon" style="background:var(--primary); color:white;">+</button>
-                    </div>
+                    <h4 style="margin-bottom:0.5rem; color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Purge Globale</h4>
+                    <p style="font-size:0.85rem; margin-bottom:10px; color:var(--text-muted);">Supprimer TOUTES les données de l'application et revenir à un état vierge.</p>
+                    <button class="btn-primary" onclick="purgeDatabase('all')" style="width:100%; background:var(--danger); box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);">🗑️ Purge Totale (Tout Supprimer)</button>
                 </div>
 
-                <div style="text-align:right; margin-top:2rem;">
+                <div style="text-align:right; margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border);">
                      <button onclick="closeModal('settingsModal')" class="btn-ghost">Fermer</button>
                 </div>
             </div>
@@ -2155,11 +2206,14 @@ Cordialement.`);
                 contactList.appendChild(group);
             });
 
-            // Show/hide categories section based on admin level
+            // Show/hide categories tab based on admin level
+            const categoriesTab = document.querySelector('.settings-tab[onclick*="categories"]');
             const categoriesSection = document.getElementById('categoriesSection');
             if(isAdmin === 'full') {
+                if(categoriesTab) categoriesTab.style.display = 'block';
                 categoriesSection.style.display = 'block';
             } else {
+                if(categoriesTab) categoriesTab.style.display = 'none';
                 categoriesSection.style.display = 'none';
             }
 
@@ -2291,6 +2345,78 @@ Cordialement.`);
                 el.value = ''; // Reset input
             };
             reader.readAsText(file);
+        }
+
+        // --- SETTINGS TABS ---
+        function switchSettingsTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Show selected tab
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // --- PURGE DATABASE ---
+        function purgeDatabase(scope) {
+            let confirmMessage = '';
+            let scopeLabel = '';
+
+            if(scope === 'all') {
+                confirmMessage = "⚠️ ATTENTION ⚠️\n\nVous êtes sur le point de SUPPRIMER TOUTES LES DONNÉES de l'application.\n\nCeci inclut :\n- Toutes les catégories\n- Toutes les fiches\n- Tous les contacts\n- Tous les widgets du tableau de bord\n- Toutes les informations\n\nCette action est IRRÉVERSIBLE.\n\nÊtes-vous absolument certain de vouloir continuer ?";
+                scopeLabel = "totale";
+            } else if(scope === 'global') {
+                confirmMessage = "Voulez-vous supprimer toutes les données de portée GLOBALE ?\n\nCeci inclut les catégories, fiches, contacts et widgets globaux.\n\nCette action est irréversible.";
+                scopeLabel = "globale";
+            } else if(scope === 'regional') {
+                confirmMessage = "Voulez-vous supprimer toutes les données de portée RÉGIONALE ?\n\nCeci inclut les catégories, fiches, contacts et widgets régionaux.\n\nCette action est irréversible.";
+                scopeLabel = "régionale";
+            } else if(scope === 'local') {
+                confirmMessage = "Voulez-vous supprimer toutes les données de portée LOCALE ?\n\nCeci inclut les catégories, fiches, contacts et widgets locaux.\n\nCette action est irréversible.";
+                scopeLabel = "locale";
+            }
+
+            if(!confirm(confirmMessage)) {
+                return;
+            }
+
+            // Double confirmation for total purge
+            if(scope === 'all') {
+                const confirmText = prompt("Pour confirmer la purge totale, tapez 'SUPPRIMER TOUT' (en majuscules) :");
+                if(confirmText !== 'SUPPRIMER TOUT') {
+                    alert("Purge annulée.");
+                    return;
+                }
+            }
+
+            // Execute purge
+            if(scope === 'all') {
+                // Reset to default empty data
+                appData = {
+                    categories: [],
+                    contactCategories: [],
+                    articles: [],
+                    contacts: [],
+                    dashboardWidgets: [],
+                    dashboardInfo: {
+                        title: "Information",
+                        content: "",
+                        tag: ""
+                    },
+                    submissions: []
+                };
+            } else {
+                // Purge specific scope
+                appData.categories = appData.categories.filter(x => x.scope !== scope);
+                appData.articles = appData.articles.filter(x => x.scope !== scope);
+                appData.contacts = appData.contacts.filter(x => x.scope !== scope);
+                appData.dashboardWidgets = appData.dashboardWidgets.filter(x => x.scope !== scope);
+            }
+
+            saveData();
+            alert(`Purge ${scopeLabel} effectuée avec succès.`);
+            location.reload();
         }
 
         init();
